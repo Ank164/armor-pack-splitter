@@ -45,14 +45,6 @@ To run through MO2, add the EXE as an executable and set its Start in folder to 
 - Generated outputs with arbitrary names and no identifying markers may not be detectable. Open original source plugins and supply authored asset folders.
 - The source pack's showroom, merchants, containers, distribution lists, and other world content are omitted. The exported recipes or an item spawning tool provide access to the items.
 
-## Validation performed
-
-Tested against `[SunJeong] Loverslab Collection 3.3`: 359 armor records grouped into 66 suggested sets. The Red Moon test exported 12 armor pieces, 31 total records and 109 files using the active MO2 profile, with no reference to the original ESP. This is data and asset validation; an in-game equip test has not been performed.
-
-Regression checks cover shared dependency deduplication, recipe inclusion and remapping, new record ownership, source master removal, unrelated-item exclusion, existing-output refusal, path traversal rejection, and missing required mesh blocking.
-
-Version 0.3.0 checks also cover the exact 2,048-record ESL boundary, overflow refusal, installable ZIP layout and extraction, asset byte preservation, and always-visible error/optional sections. A Babydoll ZIP was exported from the actual pack with 6 armor pieces, 18 records, and 61 assets.
-
 ## Build and license
 
 The split-steel chestplate icon was generated with the built-in image-generation tool. Its original transparent artwork, Windows icon, and exact generation prompt are in `Assets/ArmorPackSplitter.png`, `Assets/ArmorPackSplitter.ico`, and `Assets/Icon-Prompt.txt`.
