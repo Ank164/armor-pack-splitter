@@ -32,6 +32,7 @@ internal sealed class MainForm : Form
     private readonly CheckBox darkMode = new() {Text="Dark mode",AutoSize=true};
     private readonly System.Windows.Forms.Timer autoCheck = new() {Interval=450};
     private readonly TextBox preview = new() {Dock=DockStyle.Fill, Multiline=true, ReadOnly=true, ScrollBars=ScrollBars.Both, WordWrap=false, BackColor=Color.FromArgb(245,247,250), BorderStyle=BorderStyle.None};
+    private readonly SetPreviewControl outfitPreview=new();
     private readonly Label status = new() {Dock=DockStyle.Fill, Text="Open a pack, choose a set, then check its dependencies.", AutoEllipsis=true, TextAlign=ContentAlignment.MiddleLeft};
     private readonly Button analyze = new() {Text="Check dependencies", AutoSize=true, Enabled=false};
     private readonly Button export = new() {Text="Export ZIP…", AutoSize=true, Enabled=false};
@@ -46,7 +47,7 @@ internal sealed class MainForm : Form
     public MainForm(string? initial)
     {
         Text="Armor Pack Splitter "+typeof(MainForm).Assembly.GetName().Version?.ToString(3);
-        Width=1180; Height=860; MinimumSize=new Size(950,740);
+        Width=1400; Height=980; MinimumSize=new Size(1120,820);
         StartPosition=FormStartPosition.CenterScreen;
         Font=new Font("Segoe UI",10);
         BackColor=Color.White;
@@ -96,7 +97,7 @@ internal sealed class MainForm : Form
         dataPanel.Controls.Add(new Label {Text="Run through MO2 to use its virtual Data folder.",AutoSize=true,ForeColor=Color.DimGray},0,1);
         assets.Controls.Add(dataPanel,0,1); assets.Controls.Add(extras,1,1);
         layout.Controls.Add(assets,0,2);
-        var split=new SplitContainer {Dock=DockStyle.Fill,Size=new Size(1100,400),SplitterDistance=470,Panel1MinSize=300,Panel2MinSize=300};
+        var split=new SplitContainer {Dock=DockStyle.Fill,Size=new Size(1320,550),SplitterDistance=400,Panel1MinSize=300,Panel2MinSize=570};
         var left=new TableLayoutPanel {Dock=DockStyle.Fill,ColumnCount=1,RowCount=6};
         left.RowStyles.Add(new RowStyle(SizeType.Absolute,26)); left.RowStyles.Add(new RowStyle(SizeType.Absolute,36));
         left.RowStyles.Add(new RowStyle(SizeType.Absolute,36)); left.RowStyles.Add(new RowStyle(SizeType.Absolute,32));
@@ -106,7 +107,13 @@ internal sealed class MainForm : Form
         split.Panel1.Controls.Add(left);
         var right=new TableLayoutPanel {Dock=DockStyle.Fill,ColumnCount=1,RowCount=2,Padding=new Padding(12,0,0,0)};
         right.RowStyles.Add(new RowStyle(SizeType.Absolute,26)); right.RowStyles.Add(new RowStyle(SizeType.Percent,100));
-        right.Controls.Add(new Label {Text="Dependency preview",AutoSize=true,Font=new Font(Font,FontStyle.Bold)},0,0);right.Controls.Add(preview,0,1);
+        var previewSplit=new SplitContainer{Dock=DockStyle.Fill,Orientation=Orientation.Horizontal,Size=new Size(850,550),SplitterDistance=400,Panel1MinSize=180,Panel2MinSize=100};
+        previewSplit.Panel1.Controls.Add(outfitPreview);
+        var notes=new TableLayoutPanel{Dock=DockStyle.Fill,ColumnCount=1,RowCount=2};
+        notes.RowStyles.Add(new RowStyle(SizeType.Absolute,26));notes.RowStyles.Add(new RowStyle(SizeType.Percent,100));
+        notes.Controls.Add(new Label{Text="Dependencies and export notes",AutoSize=true,Font=new Font(Font,FontStyle.Bold)},0,0);notes.Controls.Add(preview,0,1);
+        previewSplit.Panel2.Controls.Add(notes);
+        right.Controls.Add(new Label {Text="3D set preview — all checked pieces together",AutoSize=true,Font=new Font(Font,FontStyle.Bold)},0,0);right.Controls.Add(previewSplit,0,1);
         split.Panel2.Controls.Add(right); layout.Controls.Add(split,0,3);
         var options=new FlowLayoutPanel {Dock=DockStyle.Fill,WrapContents=true};options.Controls.Add(recipes);options.Controls.Add(useMo2);options.Controls.Add(allowIncomplete);layout.Controls.Add(options,0,4);
         var destination=new TableLayoutPanel {Dock=DockStyle.Fill,ColumnCount=4};
@@ -181,7 +188,7 @@ internal sealed class MainForm : Form
     }
     internal async Task LoadSource(string path)
     {
-        autoCheck.Stop();plan?.Dispose();plan=null;engine=null;selected.Clear();
+        autoCheck.Stop();outfitPreview.Clear("Opening armor pack…");plan?.Dispose();plan=null;engine=null;selected.Clear();
         refreshing=true;
         try{sets.Items.Clear();pieces.Items.Clear();}finally{refreshing=false;}
         preview.Text="Loading plugin…";
@@ -224,6 +231,7 @@ internal sealed class MainForm : Form
     private void InvalidatePlan()
     {
         autoCheck.Stop();
+        outfitPreview.Clear(selected.Count==0?"Check armor pieces to preview them together.":"Selection changed. Preparing the combined outfit preview…");
         plan?.Dispose();plan=null;export.Enabled=false;analyze.Enabled=!busy&&engine is not null&&selected.Count>0;
         if(engine is not null){status.Text=$"{selected.Count} pieces selected — checking dependencies shortly…";preview.Text="Selection changed. Dependencies will be checked automatically.";if(selected.Count>0)autoCheck.Start();}
     }
@@ -242,6 +250,7 @@ internal sealed class MainForm : Form
             plan?.Dispose();plan=null;
             plan=await Task.Run(()=>engine.Plan(keys,includeRecipes,dataFolder,folders,s=>((IProgress<string>)progress).Report(s),includeMo2));
             RenderPlan();
+            outfitPreview.SetPlan(plan,keys);
         }
         catch(Exception ex){preview.Text=ex.ToString();status.Text="Dependency check failed.";}
         finally{SetBusy(false);}
@@ -299,6 +308,7 @@ internal sealed class MainForm : Form
         }
         Paint(this);
         preview.BackColor=dark?Color.FromArgb(29,33,41):Color.FromArgb(245,247,250);
+        outfitPreview.SetTheme(dark);
         if(IsHandleCreated){int value=dark?1:0;DwmSetWindowAttribute(Handle,20,ref value,sizeof(int));}
         Invalidate(true);
     }
@@ -310,7 +320,33 @@ internal sealed class MainForm : Form
         throw new InvalidOperationException("Preview set not found: "+name);
     }
     internal bool HasCheckedPlan=>plan is not null&&!busy;
-    internal string DiagnosticState=>status.Text+"\n"+preview.Text;
+    internal Task PreviewReady=>outfitPreview.Ready;
+    internal void SavePreviewSnapshot(string path)=>outfitPreview.SaveSnapshot(path);
+    internal PreviewScene? PreviewScene=>outfitPreview.Scene;
+    internal async Task VerifyPreviewInteractions()
+    {
+        var original=selected.Count;
+        if(original<2)throw new InvalidOperationException("Preview interaction check requires a multi-piece set.");
+        var index=Enumerable.Range(0,pieces.Items.Count).First(i=>pieces.GetItemChecked(i));
+        pieces.SetItemChecked(index,false);
+        await WaitForPreview();
+        if(outfitPreview.Scene?.Pieces!=original-1)throw new Exception("Unchecking a piece did not refresh the combined scene.");
+        outfitPreview.SaveSnapshot("preview-piece-removed.png");
+        pieces.SetItemChecked(index,true);await WaitForPreview();
+        if(outfitPreview.Scene?.Pieces!=original)throw new Exception("Restoring a piece did not refresh the combined scene.");
+        await outfitPreview.SetView(true,true);outfitPreview.SaveSnapshot("preview-weight-0.png");
+        await outfitPreview.SetView(false,false);outfitPreview.SaveSnapshot("preview-male.png");
+        await outfitPreview.SetView(true,false);outfitPreview.TurnAround();outfitPreview.SaveSnapshot("preview-back.png");outfitPreview.Fit();
+        File.WriteAllText("preview-interactions.txt","PASS: UI piece removal and restoration refresh the combined scene.\nPASS: Female weight 0, male, and back views rendered.\n"+outfitPreview.DiagnosticState);
+        async Task WaitForPreview()
+        {
+            var deadline=DateTime.UtcNow.AddSeconds(60);
+            while(!HasCheckedPlan&&DateTime.UtcNow<deadline)await Task.Delay(50);
+            if(!HasCheckedPlan)throw new TimeoutException("Selection dependency scan did not finish.");
+            await outfitPreview.Ready;
+        }
+    }
+    internal string DiagnosticState=>status.Text+"\n3D: "+outfitPreview.DiagnosticState+"\n"+preview.Text;
     internal Task StartupReady=>startupReady.Task;
     internal bool UsesMo2List=>inMo2;
     internal int PluginCount=>pluginChoices.Count;

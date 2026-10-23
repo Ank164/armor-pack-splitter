@@ -109,6 +109,7 @@ internal static class SelfTest
                 Assert(bsQueue.Any(e=>e.Path.EndsWith(@"Shared\Body.osd"))&&bsQueue.Any(e=>e.Path.EndsWith(@"Local\Local.osd"))&&!bsQueue.Any(e=>e.Path.Contains("Delta")),"BodySlide resolves shared versus local slider folders and OSD dataset suffixes");
                 Assert(bsQueue.Any(e=>e.Path.EndsWith(@"Local\Input.nif")),"BodySlide source mesh queued");
             }
+            PreviewSelfTest.Run(scratch,Assert);
             log.Add("Fixture checks completed.");
             if(realSource is not null)
             {

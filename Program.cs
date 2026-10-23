@@ -66,10 +66,14 @@ internal static class Program
                     var deadline=DateTime.UtcNow.AddSeconds(40);
                     while(!form.HasCheckedPlan&&DateTime.UtcNow<deadline)await Task.Delay(50);
                     if(!form.HasCheckedPlan)throw new Exception("Automatic dependency check did not finish.");
+                    await form.PreviewReady;
+                    await Task.Delay(250);
+                    form.SavePreviewSnapshot("preview-3d.png");
                     using var bitmap=new Bitmap(form.Width,form.Height);
                     Application.DoEvents();
                     form.DrawToBitmap(bitmap,new Rectangle(0,0,form.Width,form.Height));
                     bitmap.Save("preview.png");
+                    if(args.Contains("--preview-checks"))await form.VerifyPreviewInteractions();
                     File.WriteAllText("render-state.txt",$"MO2 selector: {form.UsesMo2List}\nPlugins: {form.PluginCount}\n"+form.DiagnosticState);
                 }
                 catch(Exception ex){File.WriteAllText("render-error.txt",ex+"\n"+form.DiagnosticState);Environment.ExitCode=1;}

@@ -4,9 +4,17 @@ A standalone Windows app for extracting selected Skyrim Special Edition armor se
 
 ## Download and install
 
-Download **ArmorPackSplitter-1.0.0-win-x64.zip** from the [latest release](https://github.com/Ank164/armor-pack-splitter/releases/latest), extract it into its own folder, and run `ArmorPackSplitter.exe`. Windows x64 is required. The .NET runtime is included.
+Download the **win-x64.zip** app archive from the [latest release](https://github.com/Ank164/armor-pack-splitter/releases/latest), extract it into its own folder, and run `ArmorPackSplitter.exe`. Windows x64 is required. The .NET runtime is included.
 
 For MO2, add the extracted EXE to its executable list, set **Start in** to the extracted application folder, and launch it through MO2. Keep the app outside any individual armor mod folder.
+
+## 3D set preview
+
+All checked pieces appear together in a textured 3D view. Checking or unchecking a piece updates the outfit. Choose female/male and weight 0/100 models using the controls above the viewer.
+
+Drag with the left mouse button to rotate, scroll to zoom, and drag with the right mouse button to pan. Front, Back, and Reset view buttons provide quick camera controls. Drag the divider below the viewer to give it more space; dependency notes remain underneath.
+
+The preview uses the same authored meshes and textures as the export, including supported BSA assets. It shows the static bind pose, with embedded body meshes where present. It does not simulate cloth physics, animations, BodySlide sliders, or Skyrim's exact lighting. Missing preview models or materials are explained separately from export blockers. External-master armor addons and texture replacements outside the export record closure may be unavailable in the preview.
 
 ## Use
 

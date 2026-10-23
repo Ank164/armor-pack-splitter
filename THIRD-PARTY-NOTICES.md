@@ -76,21 +76,21 @@ Metadata and license: licenses/ini-parser-netstandard-2.5.3/
 ## K4os.Compression.LZ4.Streams 1.3.8
 Authors: Milosz Krajewski
 Copyright: Milosz Krajewski
-License: 
+License: https://github.com/MiloszKrajewski/K4os.Compression.LZ4/blob/master/LICENSE?raw=true
 Source: https://github.com/MiloszKrajewski/K4os.Compression.LZ4
 Metadata and license: licenses/K4os.Compression.LZ4.Streams-1.3.8/
 
 ## K4os.Compression.LZ4 1.3.8
 Authors: Milosz Krajewski
 Copyright: Milosz Krajewski
-License: 
+License: https://github.com/MiloszKrajewski/K4os.Compression.LZ4/blob/master/LICENSE?raw=true
 Source: https://github.com/MiloszKrajewski/K4os.Compression.LZ4
 Metadata and license: licenses/K4os.Compression.LZ4-1.3.8/
 
 ## K4os.Hash.xxHash 1.0.8
 Authors: Milosz Krajewski
 Copyright: Milosz Krajewski
-License: 
+License: https://raw.githubusercontent.com/MiloszKrajewski/K4os.Hash.xxHash/master/LICENSE
 Source: https://github.com/MiloszKrajewski/K4os.Hash.xxHash
 Metadata and license: licenses/K4os.Hash.xxHash-1.0.8/
 
@@ -208,10 +208,18 @@ Metadata and license: licenses/Noggog.CSharpExt-4.1.0/
 ## OneOf 3.0.271
 Authors: Harry McIntyre
 Copyright: Harry McIntyre
-License: 
+License: https://github.com/mcintyre321/OneOf/blob/master/licence.md
 Source: https://github.com/mcintyre321/OneOf.git
 Commit: 6e02dbe75d0f20f198c640d4c04190a85c5ac9e6
 Metadata and license: licenses/OneOf-3.0.271/
+
+## Pfim 0.11.4
+Authors: Nick Babcock
+Copyright: Nick Babcock
+License: https://raw.githubusercontent.com/nickbabcock/Pfim/master/LICENSE.txt
+Source: https://github.com/nickbabcock/Pfim
+Commit: 0a00d8152ca4dc0e0a5821c6b8fd5261fca1e84d
+Metadata and license: licenses/Pfim-0.11.4/
 
 ## Reloaded.Memory 9.4.1
 Authors: Sewer56

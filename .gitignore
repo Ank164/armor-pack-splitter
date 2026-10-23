@@ -5,6 +5,8 @@ test-*.json
 catalog*.json
 api.txt
 preview.png
+preview-*.png
+preview-interactions.txt
 self-test.txt
 render-error.txt
 artifacts/

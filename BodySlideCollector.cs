@@ -18,6 +18,12 @@ internal sealed partial class AssetResolver
         var names=new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var outputNames=outputs.Select(Path.GetFileName).ToHashSet(StringComparer.OrdinalIgnoreCase);
         var seen=new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var availability=new Dictionary<string,bool>(StringComparer.OrdinalIgnoreCase);
+        bool Available(string path)
+        {
+            if(!availability.TryGetValue(path,out var value))availability[path]=value=Exists(path);
+            return value;
+        }
         foreach(var file in ProjectFiles("SliderSets"))
         {
             try
@@ -61,10 +67,10 @@ internal sealed partial class AssetResolver
                         var shape=set.Elements().FirstOrDefault(s=>(s.Name.LocalName is "Shape" or "BaseShapeName")&&s.Attribute("target")?.Value==target);
                         var folders=local?new[]{folder}:(shape?.Attribute("DataFolder")?.Value??folder).Split(';');
                         var candidates=folders.Select(f=>Normalize(BodySlideRoot+@"ShapeData\"+f+"\\"+dataFile)).ToArray();
-                        var chosen=candidates.FirstOrDefault(Exists)??candidates[0];
+                        var chosen=candidates.FirstOrDefault(Available)??candidates[0];
                         dependencies.Add(chosen);
                     }
-                    var missing=dependencies.Where(p=>!Exists(p)).ToArray();
+                    var missing=dependencies.Where(p=>!Available(p)).ToArray();
                     if(missing.Length>0)
                     {
                         plan.Notes.Add($"Missing optional BodySlide variant: {name}. Project omitted because source dependencies are unavailable: {string.Join(", ",missing)}. Prebuilt equipment remains available.");

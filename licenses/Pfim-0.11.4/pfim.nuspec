@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Pfim</id>
+    <version>0.11.4</version>
+    <authors>Nick Babcock</authors>
+    <licenseUrl>https://raw.githubusercontent.com/nickbabcock/Pfim/master/LICENSE.txt</licenseUrl>
+    <projectUrl>https://nickbabcock.github.io/Pfim/</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/nickbabcock/Pfim/master/analysis/logo.png?raw=true</iconUrl>
+    <description>A simple and fast .NET Standard image decoder for targa (.tga) and direct draw surface (.dds) images</description>
+    <copyright>Nick Babcock</copyright>
+    <tags>image-decoding tga targa dds</tags>
+    <repository type="git" url="https://github.com/nickbabcock/Pfim" commit="0a00d8152ca4dc0e0a5821c6b8fd5261fca1e84d" />
+    <dependencies>
+      <group targetFramework=".NETStandard2.0" />
+    </dependencies>
+  </metadata>
+</package>

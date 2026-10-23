@@ -36,6 +36,7 @@ foreach ($entry in ($entries | Sort-Object -Unique)) {
     Get-ChildItem -LiteralPath $packageRoot -File | Where-Object { $_.Name -match '^(LICENSE|COPYING|NOTICE|THIRD-PARTY-NOTICES|ThirdPartyNotices)' } | ForEach-Object { Copy-Item -LiteralPath $_.FullName -Destination $destination -Force }
     $license = $metadata.license.InnerText
     if (!$license) { $license = [string]$metadata.license }
+    if (!$license -and $metadata.licenseUrl) { $license = [string]$metadata.licenseUrl }
     $hasLicense = @(Get-ChildItem -LiteralPath $destination -File | Where-Object { $_.Name -match '^(LICENSE|COPYING)' }).Count -gt 0
     if (!$hasLicense -and $metadata.license.type -eq 'expression') {
         Invoke-WebRequest -Uri ('https://licenses.nuget.org/' + [Uri]::EscapeDataString($license)) -OutFile (Join-Path $destination 'LICENSE.txt')
