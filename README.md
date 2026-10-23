@@ -8,39 +8,6 @@ Download **ArmorPackSplitter-1.0.0-win-x64.zip** from the [latest release](https
 
 For MO2, add the extracted EXE to its executable list, set **Start in** to the extracted application folder, and launch it through MO2. Keep the app outside any individual armor mod folder.
 
-## 1.0.0
-
-First public release, including the BodySlide dependency fix. Features include a searchable MO2 plugin list, armor set and piece selection, automatic dependency checks, dark mode, installable ZIP exports, compact ESL-flagged ESPs, and selected BodySlide projects with their available source dependencies.
-
-New installations detect nearby game Data folders or the registered Skyrim SE install. Select the Data folder manually if detection cannot find your installation. Existing settings are retained.
-
-## 0.3.1
-
-- Restores BodySlide export support: includes matching pack projects, source NIFs, local/shared slider data, and filtered group memberships under CalienteTools/BodySlide.
-- Unavailable alternative BodySlide variants are omitted and explained in optional notes. Prebuilt game meshes remain exportable.
-- Babydoll validation: 6 armor pieces, 18 records, 83 files, 9 complete BodySlide projects, no unresolved required dependencies. ZIP project references and asset hashes verified; no interactive BodySlide build or in-game test performed.
-
-## 0.3.0
-
-- When launched through MO2, the top dropdown lists plugins from the current profile. Type into the adjacent filter to narrow the list; selecting a plugin loads its sets. Browse for plugin is used outside MO2.
-- Required errors, optional files, and general notes are always shown in separate sections. The optional-details checkbox has been removed.
-- Export saves an installable ZIP with the ESP, meshes, textures, and other assets at the archive root. MO2 can install it directly.
-- The ESP is always ESL-flagged. New records are allocated in the compact 0x800–0xFFF range and verified after writing; selections over 2,048 records must be split.
-
-## 0.2.1
-
-- Fixed MO2 startup compatibility by building the app without the CET compatibility flag. This is limited to this executable; no system or MO2 security settings are changed.
-- Handles generated marker files in MO2's combined virtual Data directory without rejecting the entire asset search. Authored physical mod providers remain the source of loose assets.
-- Opening a pack through MO2's virtual Data folder resolves it to its authored plugin provider.
-- Verified a real launch through the running MO2 instance, including automatic dependency checking.
-
-## 0.2.2
-
-- Archive lookup includes archives belonging to other active plugins, with later-plugin archive priority. This fixes missing dependencies stored in another enabled mod's BSA.
-- Weight counterpart checks respect the armor addon's gender-specific weight-slider flags. A disabled slider no longer creates a requirement for an unused `_0` or `_1` model.
-- Optional morph and script-source omissions were separated from required errors; 0.3.0 now always displays their full details.
-- Actual missing assets and unverified scripts remain visible; no source plugin or mesh is silently repaired.
-
 ## Use
 
 1. Run `ArmorPackSplitter.exe`. Through MO2, choose the **original armor pack ESP** from the plugin dropdown. Outside MO2, use **Browse for plugin**.
