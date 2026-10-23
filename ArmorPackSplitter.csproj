@@ -4,7 +4,7 @@
     <UseWindowsForms>true</UseWindowsForms><UseWPF>true</UseWPF><Nullable>enable</Nullable><ImplicitUsings>enable</ImplicitUsings>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier><SelfContained>true</SelfContained>
     <PublishSingleFile>true</PublishSingleFile><IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
-    <Version>1.1.1</Version>
+    <Version>1.1.2</Version>
     <!-- MO2's injected startup trampoline is incompatible with CET shadow stacks. -->
     <CETCompat>false</CETCompat>
     <Product>Armor Pack Splitter</Product><Title>Armor Pack Splitter</Title>

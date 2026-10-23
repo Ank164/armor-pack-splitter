@@ -62,7 +62,10 @@ internal sealed class ExportEngine
             var name = names[armor.FormKey];
             var words = name.Split(' ', StringSplitOptions.RemoveEmptyEntries);
             string? key = null;
-            for (int count = 1; count <= Math.Min(5, words.Length); count++)
+            var bracket=Regex.Match(name,@"^\[[^\]]+\]");
+            if(bracket.Success&&!GenericPrefixes.Contains(bracket.Value)&&names.Values.Count(n=>n.StartsWith(bracket.Value+" ",StringComparison.OrdinalIgnoreCase)||n.Equals(bracket.Value,StringComparison.OrdinalIgnoreCase))>=2)
+                key=bracket.Value;
+            for (int count = 1; key is null&&count <= Math.Min(5, words.Length); count++)
             {
                 var prefix = string.Join(' ', words.Take(count));
                 if (GenericPrefixes.Contains(prefix)) continue;
@@ -84,7 +87,7 @@ internal sealed class ExportEngine
                 while(count<common.Count&&count<tokens.Length&&common[count].Equals(tokens[count],StringComparison.OrdinalIgnoreCase))count++;
                 common=common.Take(count).ToList();
             }
-            var label=g.Value.Count>1&&common.Count>0?string.Join(' ',common):g.Key;
+            var label=(g.Value.Count>1&&common.Count>0?string.Join(' ',common):g.Key).TrimEnd(' ','-');
             return new ArmorSet(label,g.Value.OrderBy(DisplayName).ToList());
         }).OrderBy(s => s.Name, StringComparer.OrdinalIgnoreCase).ToList();
     }

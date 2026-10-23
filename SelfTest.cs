@@ -110,6 +110,7 @@ internal static class SelfTest
                 Assert(bsQueue.Any(e=>e.Path.EndsWith(@"Local\Input.nif")),"BodySlide source mesh queued");
             }
             PreviewSelfTest.Run(scratch,Assert);
+            PhysicsDependencyTests.Run(scratch,Assert);
             log.Add("Fixture checks completed.");
             if(realSource is not null)
             {

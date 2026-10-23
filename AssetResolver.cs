@@ -12,6 +12,7 @@ using Mutagen.Bethesda.Plugins.Assets;
 using Mutagen.Bethesda.Plugins.Records;
 using Mutagen.Bethesda.Skyrim;
 using NiflySharp;
+using NiflySharp.Blocks;
 
 namespace ArmorPackSplitter;
 
@@ -58,6 +59,7 @@ internal sealed partial class AssetResolver : IDisposable
         {
             var queue = new Queue<(string Path, string From)>();
             var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var legacyPhysics=new Dictionary<string,List<string>>(StringComparer.OrdinalIgnoreCase);
             foreach (var record in records)
             {
                 foreach (var asset in record.EnumerateAssetLinks(AssetLinkQuery.Listed))
@@ -106,11 +108,17 @@ internal sealed partial class AssetResolver : IDisposable
                         plan.ReviewIssues.Add($"Cannot fully inspect mesh {path}; the original file is available, but its nested dependencies are unverified.");
                         continue;
                     }
-                    foreach(var text in MeshAssetStrings(nif))
-                        if (TryAsset(text,out var link))
+                    foreach(var reference in MeshAssetReferences(nif))
+                        if (TryAsset(reference.Text,out var link))
                         {
-                            if(text.Replace('/','\\').Contains("\\data\\",StringComparison.OrdinalIgnoreCase))plan.Notes.Add($"Author-machine path resolved under Data: {text} -> {link}. The source mesh is copied unchanged.");
-                            queue.Enqueue((link,path));
+                            if(reference.Text.Replace('/','\\').Contains("\\data\\",StringComparison.OrdinalIgnoreCase))plan.Notes.Add($"Author-machine path resolved under Data: {reference.Text} -> {link}. The source mesh is copied unchanged.");
+                            if(reference.LegacyPhysics&&Path.GetExtension(link).Equals(".xml",StringComparison.OrdinalIgnoreCase))
+                            {
+                                try{link=Normalize(link);}catch(Exception ex){plan.Errors.Add($"Unsafe legacy path from {path}: {ex.Message}");continue;}
+                                if(!legacyPhysics.TryGetValue(link,out var referringMeshes))legacyPhysics[link]=referringMeshes=[];
+                                if(!referringMeshes.Contains(path,StringComparer.OrdinalIgnoreCase))referringMeshes.Add(path);
+                            }
+                            else queue.Enqueue((link,path+(reference.SmpPhysics?" [SMP physics configuration]":"")));
                         }
                     // Weight counterparts are selected from ARMA flags above, not guessed from every mesh filename.
                     var tri=Path.ChangeExtension(path,"tri");
@@ -133,6 +141,22 @@ internal sealed partial class AssetResolver : IDisposable
                 else if (ext.Equals(".pex",StringComparison.OrdinalIgnoreCase))
                     plan.ReviewIssues.Add($"Script {path} is available and will be copied, but dynamic script dependencies need manual review.");
                 if (seen.Count>30000) throw new InvalidOperationException("Asset dependency walk exceeded 30,000 files.");
+            }
+            foreach(var (path,meshes) in legacyPhysics)
+            {
+                // A real SMP/record/XML reference to the same file always takes precedence.
+                if(seen.Contains(path))continue;
+                var from=string.Join(", ",meshes);
+                var resolved=Resolve(path);
+                if(resolved is null)
+                    plan.Notes.Add($"Missing optional legacy HDT-PE physics file: {path} (HDT Havok Path metadata in {from}). This legacy tag is not an SMP configuration and does not block a Skyrim SE export. The mesh is copied unchanged; no legacy physics is restored.");
+                else
+                {
+                    var (bytes,provider)=resolved.Value;var cached=SafeCombine(plan.Cache,path);
+                    Directory.CreateDirectory(Path.GetDirectoryName(cached)!);File.WriteAllBytes(cached,bytes);
+                    plan.Files.Add(new(path,provider,cached,Convert.ToHexString(SHA256.HashData(bytes)),meshes.Select(m=>m+" [legacy HDT-PE metadata; preserved file]").ToList()));
+                    plan.Notes.Add($"Legacy HDT-PE file preserved: {path}. Referenced by HDT Havok Path metadata in {from}; it is not interpreted as an SMP configuration.");
+                }
             }
             plan.Notes.Add("Records are read from the opened plugin, not generated overrides.");
             if(archiveOnlyRoots.Count>0)plan.Notes.Add("MO2 virtual Data contains generated assets. Loose files are resolved from the authored mod folders; base/master archives remain available.");
@@ -198,7 +222,8 @@ internal sealed partial class AssetResolver : IDisposable
         return (record.EditorID??record.FormKey.ToString())+": "+(roles.Count>0?string.Join("; ",roles):"record asset dependency");
     }
 
-    private static IEnumerable<string> MeshAssetStrings(NifFile nif)
+    internal sealed record MeshReference(string Text,bool LegacyPhysics,bool SmpPhysics);
+    internal static IEnumerable<MeshReference> MeshAssetReferences(NifFile nif)
     {
         foreach(var block in nif.Blocks)
         {
@@ -212,7 +237,10 @@ internal sealed partial class AssetResolver : IDisposable
                     || type.Name=="NiStringExtraData" && property.Name=="StringData"
                     || type.Name=="NiStringsExtraData" && property.Name=="Data";
                 if(!assetField || property.GetIndexParameters().Length>0)continue;
-                foreach(var value in Strings(property.GetValue(block)))yield return value;
+                var extraData=type.Name is "NiStringExtraData" or "NiStringsExtraData";
+                var tag=extraData?(block as NiExtraData)?.Name?.String:null;
+                foreach(var value in Strings(property.GetValue(block)))
+                    yield return new(value,extraData&&string.Equals(tag,"HDT Havok Path",StringComparison.OrdinalIgnoreCase),extraData&&string.Equals(tag,"HDT Skinned Mesh Physics Object",StringComparison.OrdinalIgnoreCase));
             }
         }
     }
