@@ -33,6 +33,10 @@ internal sealed class MainForm : Form
     private readonly System.Windows.Forms.Timer autoCheck = new() {Interval=450};
     private readonly TextBox preview = new() {Dock=DockStyle.Fill, Multiline=true, ReadOnly=true, ScrollBars=ScrollBars.Both, WordWrap=false, BackColor=Color.FromArgb(245,247,250), BorderStyle=BorderStyle.None};
     private readonly SetPreviewControl outfitPreview=new();
+    private readonly PreviewTabs viewTabs=new();
+    private readonly Panel modelTab=new(){Text="3D set preview",Padding=new Padding(4)};
+    private readonly Panel notesTab=new(){Text="Errors and notes",Padding=new Padding(8)};
+    private readonly SplitContainer mainSplit=new(){Dock=DockStyle.Fill,Size=new Size(1100,450),SplitterDistance=350,Panel1MinSize=240,Panel2MinSize=260};
     private readonly Label status = new() {Dock=DockStyle.Fill, Text="Open a pack, choose a set, then check its dependencies.", AutoEllipsis=true, TextAlign=ContentAlignment.MiddleLeft};
     private readonly Button analyze = new() {Text="Check dependencies", AutoSize=true, Enabled=false};
     private readonly Button export = new() {Text="Export ZIP…", AutoSize=true, Enabled=false};
@@ -47,7 +51,7 @@ internal sealed class MainForm : Form
     public MainForm(string? initial)
     {
         Text="Armor Pack Splitter "+typeof(MainForm).Assembly.GetName().Version?.ToString(3);
-        Width=1400; Height=980; MinimumSize=new Size(1120,820);
+        Width=1180; Height=840; MinimumSize=new Size(860,680);
         StartPosition=FormStartPosition.CenterScreen;
         Font=new Font("Segoe UI",10);
         BackColor=Color.White;
@@ -81,7 +85,7 @@ internal sealed class MainForm : Form
         layout.Controls.Add(Row(new Label {Text="Export an armor set to its own mod",Font=new Font(Font.FontFamily,18,FontStyle.Bold),Dock=DockStyle.Fill},darkMode),0,0);
         var open=new Button {Text="Browse for plugin…",AutoSize=true,Visible=!inMo2};
         var sourceRow=new TableLayoutPanel{Dock=DockStyle.Fill,ColumnCount=2};
-        sourceRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,100));sourceRow.ColumnStyles.Add(new ColumnStyle(inMo2?SizeType.Absolute:SizeType.AutoSize,inMo2?300:0));
+        sourceRow.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,inMo2?70:100));sourceRow.ColumnStyles.Add(new ColumnStyle(inMo2?SizeType.Percent:SizeType.AutoSize,inMo2?30:0));
         if(inMo2){sourceRow.Controls.Add(pluginPicker,0,0);sourceRow.Controls.Add(pluginFilter,1,0);}
         else{sourceRow.Controls.Add(sourceLabel,0,0);sourceRow.Controls.Add(open,1,0);}
         layout.Controls.Add(sourceRow,0,1);
@@ -97,7 +101,7 @@ internal sealed class MainForm : Form
         dataPanel.Controls.Add(new Label {Text="Run through MO2 to use its virtual Data folder.",AutoSize=true,ForeColor=Color.DimGray},0,1);
         assets.Controls.Add(dataPanel,0,1); assets.Controls.Add(extras,1,1);
         layout.Controls.Add(assets,0,2);
-        var split=new SplitContainer {Dock=DockStyle.Fill,Size=new Size(1320,550),SplitterDistance=400,Panel1MinSize=300,Panel2MinSize=570};
+        var split=mainSplit;
         var left=new TableLayoutPanel {Dock=DockStyle.Fill,ColumnCount=1,RowCount=6};
         left.RowStyles.Add(new RowStyle(SizeType.Absolute,26)); left.RowStyles.Add(new RowStyle(SizeType.Absolute,36));
         left.RowStyles.Add(new RowStyle(SizeType.Absolute,36)); left.RowStyles.Add(new RowStyle(SizeType.Absolute,32));
@@ -105,15 +109,10 @@ internal sealed class MainForm : Form
         left.Controls.Add(setLabel,0,0);
         left.Controls.Add(setSearch,0,1); left.Controls.Add(sets,0,2); left.Controls.Add(showAll,0,3); left.Controls.Add(pieceSearch,0,4);left.Controls.Add(pieces,0,5);
         split.Panel1.Controls.Add(left);
-        var right=new TableLayoutPanel {Dock=DockStyle.Fill,ColumnCount=1,RowCount=2,Padding=new Padding(12,0,0,0)};
-        right.RowStyles.Add(new RowStyle(SizeType.Absolute,26)); right.RowStyles.Add(new RowStyle(SizeType.Percent,100));
-        var previewSplit=new SplitContainer{Dock=DockStyle.Fill,Orientation=Orientation.Horizontal,Size=new Size(850,550),SplitterDistance=400,Panel1MinSize=180,Panel2MinSize=100};
-        previewSplit.Panel1.Controls.Add(outfitPreview);
-        var notes=new TableLayoutPanel{Dock=DockStyle.Fill,ColumnCount=1,RowCount=2};
-        notes.RowStyles.Add(new RowStyle(SizeType.Absolute,26));notes.RowStyles.Add(new RowStyle(SizeType.Percent,100));
-        notes.Controls.Add(new Label{Text="Dependencies and export notes",AutoSize=true,Font=new Font(Font,FontStyle.Bold)},0,0);notes.Controls.Add(preview,0,1);
-        previewSplit.Panel2.Controls.Add(notes);
-        right.Controls.Add(new Label {Text="3D set preview — all checked pieces together",AutoSize=true,Font=new Font(Font,FontStyle.Bold)},0,0);right.Controls.Add(previewSplit,0,1);
+        var right=new Panel {Dock=DockStyle.Fill,Padding=new Padding(10,0,0,0)};
+        modelTab.Controls.Add(outfitPreview);notesTab.Controls.Add(preview);
+        viewTabs.AddPage(modelTab);viewTabs.AddPage(notesTab);right.Controls.Add(viewTabs);
+        viewTabs.SelectedTabChanged+=(_,_)=>{if(viewTabs.SelectedTab==modelTab&&IsHandleCreated)BeginInvoke(()=>outfitPreview.Fit());};
         split.Panel2.Controls.Add(right); layout.Controls.Add(split,0,3);
         var options=new FlowLayoutPanel {Dock=DockStyle.Fill,WrapContents=true};options.Controls.Add(recipes);options.Controls.Add(useMo2);options.Controls.Add(allowIncomplete);layout.Controls.Add(options,0,4);
         var destination=new TableLayoutPanel {Dock=DockStyle.Fill,ColumnCount=4};
@@ -231,6 +230,7 @@ internal sealed class MainForm : Form
     private void InvalidatePlan()
     {
         autoCheck.Stop();
+        notesTab.Text="Errors and notes";viewTabs.Invalidate();
         outfitPreview.Clear(selected.Count==0?"Check armor pieces to preview them together.":"Selection changed. Preparing the combined outfit preview…");
         plan?.Dispose();plan=null;export.Enabled=false;analyze.Enabled=!busy&&engine is not null&&selected.Count>0;
         if(engine is not null){status.Text=$"{selected.Count} pieces selected — checking dependencies shortly…";preview.Text="Selection changed. Dependencies will be checked automatically.";if(selected.Count>0)autoCheck.Start();}
@@ -260,6 +260,9 @@ internal sealed class MainForm : Form
         if(plan is null||engine is null)return;
         var masters=plan.Records.SelectMany(r=>r.EnumerateFormLinks()).Where(l=>!l.FormKey.IsNull&&l.FormKey.ModKey!=engine.Source.ModKey).Select(l=>l.FormKey.ModKey.ToString()).Distinct();
         preview.Text=PreviewText(plan,selected.Count,masters,allowIncomplete.Checked);
+        var problems=plan.Errors.Count+plan.ReviewIssues.Count;
+        notesTab.Text=problems>0?$"Errors and notes ({problems})":"Errors and notes";
+        viewTabs.Invalidate();
         status.Text=plan.Errors.Count>0?"Export blocked by an unsafe or unsupported dependency.":plan.ReviewIssues.Count>0?$"{plan.ReviewIssues.Count} unresolved dependencies — see preview.":"Dependencies checked. Ready to export.";
         export.Enabled=!busy&&CanExport();
     }
@@ -309,6 +312,8 @@ internal sealed class MainForm : Form
         Paint(this);
         preview.BackColor=dark?Color.FromArgb(29,33,41):Color.FromArgb(245,247,250);
         outfitPreview.SetTheme(dark);
+        viewTabs.SetTheme(dark);
+        viewTabs.Invalidate();
         if(IsHandleCreated){int value=dark?1:0;DwmSetWindowAttribute(Handle,20,ref value,sizeof(int));}
         Invalidate(true);
     }
@@ -323,6 +328,26 @@ internal sealed class MainForm : Form
     internal Task PreviewReady=>outfitPreview.Ready;
     internal void SavePreviewSnapshot(string path)=>outfitPreview.SaveSnapshot(path);
     internal PreviewScene? PreviewScene=>outfitPreview.Scene;
+    internal async Task VerifyResponsiveLayout()
+    {
+        var log=new List<string>();
+        foreach(var size in new[]{new Size(1180,840),new Size(1000,740),new Size(860,680)})
+        {
+            Size=size;await Task.Delay(100);PerformLayout();
+            if(Width!=size.Width||Height!=size.Height)throw new Exception("Window refused requested size: "+size);
+            viewTabs.SelectedTab=modelTab;await Task.Delay(100);outfitPreview.VerifyLayout();outfitPreview.Fit();
+            Save("layout-"+size.Width+"-preview.png");
+            log.Add($"PASS: {size.Width}x{size.Height} window; preview pane {outfitPreview.Width}px wide; controls fit.");
+        }
+        mainSplit.SplitterDistance=mainSplit.ClientSize.Width-mainSplit.SplitterWidth-mainSplit.Panel2MinSize;
+        await Task.Delay(100);Save("layout-narrow-preview.png");outfitPreview.VerifyLayout();
+        log.Add("PASS: Divider can narrow the preview pane to 260px with wrapped controls.");
+        viewTabs.SelectedTab=notesTab;await Task.Delay(100);Save("layout-860-notes.png");
+        if(preview.Width<=0||preview.Height<=0||preview.Text.Length==0)throw new Exception("Dependency notes are not available on their tab.");
+        log.Add("PASS: Errors and optional notes remain available on the notes tab.");
+        File.WriteAllLines("layout-checks.txt",log);
+        void Save(string path){using var bitmap=new Bitmap(Width,Height);DrawToBitmap(bitmap,new Rectangle(0,0,Width,Height));bitmap.Save(path);}
+    }
     internal async Task VerifyPreviewInteractions()
     {
         var original=selected.Count;

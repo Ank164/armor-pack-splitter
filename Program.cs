@@ -74,6 +74,7 @@ internal static class Program
                     form.DrawToBitmap(bitmap,new Rectangle(0,0,form.Width,form.Height));
                     bitmap.Save("preview.png");
                     if(args.Contains("--preview-checks"))await form.VerifyPreviewInteractions();
+                    if(args.Contains("--layout-checks"))await form.VerifyResponsiveLayout();
                     File.WriteAllText("render-state.txt",$"MO2 selector: {form.UsesMo2List}\nPlugins: {form.PluginCount}\n"+form.DiagnosticState);
                 }
                 catch(Exception ex){File.WriteAllText("render-error.txt",ex+"\n"+form.DiagnosticState);Environment.ExitCode=1;}

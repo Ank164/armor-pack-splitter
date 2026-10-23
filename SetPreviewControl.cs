@@ -41,7 +41,7 @@ internal sealed class SetPreviewControl : UserControl
         viewport.Camera=camera;viewport.Children.Add(visual);
         surface.Children.Add(viewport);surface.Children.Add(placeholder);
         host=new ElementHost{Dock=DockStyle.Fill,Child=surface};
-        var toolbar=new FlowLayoutPanel{Dock=DockStyle.Fill,WrapContents=false,Margin=Padding.Empty};
+        var toolbar=new FlowLayoutPanel{Dock=DockStyle.Fill,WrapContents=true,Margin=Padding.Empty};
         gender.Items.AddRange(["Female","Male"]);gender.SelectedIndex=0;
         weight.Items.AddRange(["Weight 100","Weight 0"]);weight.SelectedIndex=0;
         foreach(var combo in new[]{gender,weight})
@@ -57,15 +57,21 @@ internal sealed class SetPreviewControl : UserControl
         toolbar.Controls.Add(gender);toolbar.Controls.Add(weight);
         foreach(var (text,angle) in new[]{("Front",0.0),("Back",Math.PI)})
         {
-            var button=new Button{Text=text,AutoSize=true,MinimumSize=new Size(55,28)};
+            var button=new Button{Text=text,AutoSize=true,AutoSizeMode=AutoSizeMode.GrowAndShrink,MinimumSize=new Size(55,28)};
             button.Click+=(_,_)=>{yaw=angle;pitch=.10;UpdateCamera();};toolbar.Controls.Add(button);
         }
-        var reset=new Button{Text="Reset view",AutoSize=true,MinimumSize=new Size(80,28)};
+        var reset=new Button{Text="Reset view",AutoSize=true,AutoSizeMode=AutoSizeMode.GrowAndShrink,MinimumSize=new Size(80,28)};
         reset.Click+=(_,_)=>Fit();toolbar.Controls.Add(reset);
         var layout=new TableLayoutPanel{Dock=DockStyle.Fill,ColumnCount=1,RowCount=4,Margin=Padding.Empty};
+        layout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent,100));
         layout.RowStyles.Add(new RowStyle(SizeType.Absolute,34));layout.RowStyles.Add(new RowStyle(SizeType.Percent,100));
         layout.RowStyles.Add(new RowStyle(SizeType.Absolute,26));layout.RowStyles.Add(new RowStyle(SizeType.Absolute,44));
         layout.Controls.Add(toolbar,0,0);layout.Controls.Add(host,0,1);layout.Controls.Add(summary,0,2);layout.Controls.Add(details,0,3);Controls.Add(layout);
+        SizeChanged+=(_,_)=>
+        {
+            var height=Math.Max(34,toolbar.GetPreferredSize(new Size(Math.Max(1,ClientSize.Width),0)).Height);
+            if(layout.RowStyles[0].Height!=height){layout.RowStyles[0].Height=height;layout.PerformLayout();}
+        };
         gender.SelectedIndexChanged+=(_,_)=>RefreshScene();weight.SelectedIndexChanged+=(_,_)=>RefreshScene();
         surface.MouseDown+=(_,e)=>
         {
@@ -200,6 +206,14 @@ internal sealed class SetPreviewControl : UserControl
         await Ready;
     }
     internal void TurnAround(){yaw+=Math.PI;UpdateCamera();}
+    internal void VerifyLayout()
+    {
+        var layout=(TableLayoutPanel)Controls[0];var toolbar=(FlowLayoutPanel)layout.GetControlFromPosition(0,0)!;
+        foreach(Control control in toolbar.Controls)
+            if(control.Left<0||control.Right>toolbar.ClientSize.Width||control.Bottom>toolbar.ClientSize.Height)
+                throw new Exception($"Preview control '{control.Text}' clipped at pane width {Width}: bounds {control.Bounds}, toolbar {toolbar.ClientSize}.");
+        if(host.Width<=0||host.Height<=0)throw new Exception("The preview viewport collapsed while resizing.");
+    }
     internal void SaveSnapshot(string path)
     {
         surface.UpdateLayout();

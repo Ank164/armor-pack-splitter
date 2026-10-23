@@ -12,7 +12,7 @@ For MO2, add the extracted EXE to its executable list, set **Start in** to the e
 
 All checked pieces appear together in a textured 3D view. Checking or unchecking a piece updates the outfit. Choose female/male and weight 0/100 models using the controls above the viewer.
 
-Drag with the left mouse button to rotate, scroll to zoom, and drag with the right mouse button to pan. Front, Back, and Reset view buttons provide quick camera controls. Drag the divider below the viewer to give it more space; dependency notes remain underneath.
+Drag with the left mouse button to rotate, scroll to zoom, and drag with the right mouse button to pan. Front, Back, and Reset view buttons provide quick camera controls. The **3D set preview** and **Errors and notes** tabs share the right pane. Drag the divider beside the piece list to change its width. Preview controls wrap in narrow windows, and the notes tab displays the number of required problems.
 
 The preview uses the same authored meshes and textures as the export, including supported BSA assets. It shows the static bind pose, with embedded body meshes where present. It does not simulate cloth physics, animations, BodySlide sliders, or Skyrim's exact lighting. Missing preview models or materials are explained separately from export blockers. External-master armor addons and texture replacements outside the export record closure may be unavailable in the preview.
 
