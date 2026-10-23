@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>Mutagen.Bethesda.Core</id>
+    <version>0.53.1</version>
+    <authors>Noggog</authors>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <license type="expression">GPL-3.0-only</license>
+    <licenseUrl>https://licenses.nuget.org/GPL-3.0-only</licenseUrl>
+    <projectUrl>https://github.com/Mutagen-Modding/Mutagen</projectUrl>
+    <description>A C# library for manipulating, creating, and analyzing Bethesda mods. Contains only the core components without the generated records.</description>
+    <releaseNotes>Bethesda Modding</releaseNotes>
+    <copyright>2024</copyright>
+    <repository type="git" url="https://github.com/Mutagen-Modding/Mutagen" branch="main" commit="bdbb6ff6faad3b4c3b0689e98e889ecd205068c8" />
+    <dependencies>
+      <group targetFramework="net8.0">
+        <dependency id="Mutagen.Bethesda.Kernel" version="0.53.1" exclude="Build,Analyzers" />
+        <dependency id="GameFinder.StoreHandlers.GOG" version="4.4.0" exclude="Build,Analyzers" />
+        <dependency id="GameFinder.StoreHandlers.Steam" version="4.4.0" exclude="Build,Analyzers" />
+        <dependency id="GameFinder.StoreHandlers.Xbox" version="4.4.0" exclude="Build,Analyzers" />
+        <dependency id="K4os.Compression.LZ4.Streams" version="1.3.8" exclude="Build,Analyzers" />
+        <dependency id="Loqui" version="3.2.0" exclude="Build,Analyzers" />
+        <dependency id="Noggog.CSharpExt" version="4.1.0" exclude="Build,Analyzers" />
+        <dependency id="SharpZipLib" version="1.4.2" exclude="Build,Analyzers" />
+        <dependency id="StrongInject" version="1.4.4" exclude="Build,Analyzers" />
+        <dependency id="System.Collections.Immutable" version="9.0.9" exclude="Build,Analyzers" />
+        <dependency id="System.Text.Encoding.CodePages" version="9.0.9" exclude="Build,Analyzers" />
+        <dependency id="ini-parser-netstandard" version="2.5.3" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework="net9.0">
+        <dependency id="Mutagen.Bethesda.Kernel" version="0.53.1" exclude="Build,Analyzers" />
+        <dependency id="GameFinder.StoreHandlers.GOG" version="4.4.0" exclude="Build,Analyzers" />
+        <dependency id="GameFinder.StoreHandlers.Steam" version="4.4.0" exclude="Build,Analyzers" />
+        <dependency id="GameFinder.StoreHandlers.Xbox" version="4.4.0" exclude="Build,Analyzers" />
+        <dependency id="K4os.Compression.LZ4.Streams" version="1.3.8" exclude="Build,Analyzers" />
+        <dependency id="Loqui" version="3.2.0" exclude="Build,Analyzers" />
+        <dependency id="Noggog.CSharpExt" version="4.1.0" exclude="Build,Analyzers" />
+        <dependency id="SharpZipLib" version="1.4.2" exclude="Build,Analyzers" />
+        <dependency id="StrongInject" version="1.4.4" exclude="Build,Analyzers" />
+        <dependency id="ini-parser-netstandard" version="2.5.3" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework="net10.0">
+        <dependency id="Mutagen.Bethesda.Kernel" version="0.53.1" exclude="Build,Analyzers" />
+        <dependency id="GameFinder.StoreHandlers.GOG" version="4.4.0" exclude="Build,Analyzers" />
+        <dependency id="GameFinder.StoreHandlers.Steam" version="4.4.0" exclude="Build,Analyzers" />
+        <dependency id="GameFinder.StoreHandlers.Xbox" version="4.4.0" exclude="Build,Analyzers" />
+        <dependency id="K4os.Compression.LZ4.Streams" version="1.3.8" exclude="Build,Analyzers" />
+        <dependency id="Loqui" version="3.2.0" exclude="Build,Analyzers" />
+        <dependency id="Noggog.CSharpExt" version="4.1.0" exclude="Build,Analyzers" />
+        <dependency id="SharpZipLib" version="1.4.2" exclude="Build,Analyzers" />
+        <dependency id="StrongInject" version="1.4.4" exclude="Build,Analyzers" />
+        <dependency id="ini-parser-netstandard" version="2.5.3" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>

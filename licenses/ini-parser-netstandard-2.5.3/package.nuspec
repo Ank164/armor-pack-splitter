@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>ini-parser-netstandard</id>
+    <version>2.5.3</version>
+    <authors>Ricardo Amores Hernández</authors>
+    <owners>Ricardo Amores Hernández</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <license type="expression">MIT</license>
+    <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
+    <projectUrl>https://github.com/rickyah/ini-parser</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/rickyah/ini-parser/development/nuget-ini-icon.png</iconUrl>
+    <description>A .NET, Mono and Unity3d compatible(*) library for reading/writing INI data from IO streams, file streams, and strings written in C#.
+
+Also implements merging operations, both for complete ini files, sections, or even just a subset of the keys contained by the files.
+
+(*) This library is 100% .NET code and does not have any dependencies on Windows API calls in order to be portable.</description>
+    <tags>ini</tags>
+    <dependencies>
+      <group targetFramework=".NETFramework2.0" />
+      <group targetFramework=".NETFramework4.0" />
+      <group targetFramework=".NETStandard2.0" />
+    </dependencies>
+  </metadata>
+</package>

@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>NexusMods.Paths</id>
+    <version>0.10.0</version>
+    <authors>Nexus Mods</authors>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <license type="expression">GPL-3.0-only</license>
+    <licenseUrl>https://licenses.nuget.org/GPL-3.0-only</licenseUrl>
+    <icon>assets/icon.png</icon>
+    <readme>docs/README.md</readme>
+    <projectUrl>https://github.com/Nexus-Mods/NexusMods.App</projectUrl>
+    <description>Package Description</description>
+    <repository type="git" url="https://github.com/Nexus-Mods/NexusMods.Paths" branch="v0.10.0" commit="6c7b575e96d712056e7c75cd366ac17e55925dbf" />
+    <dependencies>
+      <group targetFramework="net7.0">
+        <dependency id="Microsoft.Extensions.DependencyInjection.Abstractions" version="8.0.1" exclude="Build,Analyzers" />
+        <dependency id="Reloaded.Memory" version="9.4.1" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>

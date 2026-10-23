@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>System.IO.Abstractions</id>
+    <version>22.0.16</version>
+    <authors>Tatham Oddie &amp; friends</authors>
+    <license type="expression">MIT</license>
+    <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
+    <icon>icon_256x256.png</icon>
+    <readme>README.md</readme>
+    <projectUrl>https://github.com/TestableIO/System.IO.Abstractions</projectUrl>
+    <description>A set of abstractions to help make file system interactions testable.</description>
+    <copyright>Copyright © Tatham Oddie &amp; friends 2010-2025</copyright>
+    <tags>testing</tags>
+    <repository type="git" url="https://github.com/TestableIO/System.IO.Abstractions.git" commit="863b7048305fbdb4d31cf4bb77da98aec7bede78" />
+    <dependencies>
+      <group targetFramework=".NETFramework4.7.2">
+        <dependency id="TestableIO.System.IO.Abstractions.Wrappers" version="22.0.16" exclude="Build,Analyzers" />
+        <dependency id="TestableIO.System.IO.Abstractions" version="22.0.16" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework="net6.0">
+        <dependency id="TestableIO.System.IO.Abstractions.Wrappers" version="22.0.16" exclude="Build,Analyzers" />
+        <dependency id="TestableIO.System.IO.Abstractions" version="22.0.16" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework="net8.0">
+        <dependency id="TestableIO.System.IO.Abstractions.Wrappers" version="22.0.16" exclude="Build,Analyzers" />
+        <dependency id="TestableIO.System.IO.Abstractions" version="22.0.16" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework="net9.0">
+        <dependency id="TestableIO.System.IO.Abstractions.Wrappers" version="22.0.16" exclude="Build,Analyzers" />
+        <dependency id="TestableIO.System.IO.Abstractions" version="22.0.16" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="TestableIO.System.IO.Abstractions.Wrappers" version="22.0.16" exclude="Build,Analyzers" />
+        <dependency id="TestableIO.System.IO.Abstractions" version="22.0.16" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETStandard2.1">
+        <dependency id="TestableIO.System.IO.Abstractions.Wrappers" version="22.0.16" exclude="Build,Analyzers" />
+        <dependency id="TestableIO.System.IO.Abstractions" version="22.0.16" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>

@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>GameFinder.Wine</id>
+    <version>4.4.0</version>
+    <authors>erri120</authors>
+    <license type="expression">GPL-3.0-only</license>
+    <licenseUrl>https://licenses.nuget.org/GPL-3.0-only</licenseUrl>
+    <readme>docs\README.md</readme>
+    <projectUrl>https://github.com/erri120/GameFinder</projectUrl>
+    <description>Library for finding Wine prefixes.</description>
+    <tags>wine games linux</tags>
+    <repository type="git" url="https://github.com/erri120/GameFinder.git" branch="master" commit="bb462fbf9babae29375e29ec6833d8b595b3ab27" />
+    <dependencies>
+      <group targetFramework="net8.0">
+        <dependency id="GameFinder.Common" version="4.4.0" exclude="Build,Analyzers" />
+        <dependency id="GameFinder.RegistryUtils" version="4.4.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>

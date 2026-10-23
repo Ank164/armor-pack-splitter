@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>Noggog.CSharpExt</id>
+    <version>4.1.0</version>
+    <authors>Noggog</authors>
+    <description>Generic reusable classes and extension methods that apply to no specific project and flavored to taste</description>
+    <repository type="git" url="https://github.com/Noggog/CSharpExt" branch="main" commit="de16c021f62802746a4ebb7a51a2cde676fb37d7" />
+    <dependencies>
+      <group targetFramework="net8.0">
+        <dependency id="DynamicData" version="9.4.1" exclude="Build,Analyzers" />
+        <dependency id="System.IO.Abstractions" version="22.0.16" exclude="Build,Analyzers" />
+        <dependency id="System.Linq.Async" version="6.0.3" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework="net9.0">
+        <dependency id="DynamicData" version="9.4.1" exclude="Build,Analyzers" />
+        <dependency id="System.IO.Abstractions" version="22.0.16" exclude="Build,Analyzers" />
+        <dependency id="System.Linq.Async" version="6.0.3" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework="net10.0">
+        <dependency id="DynamicData" version="9.4.1" exclude="Build,Analyzers" />
+        <dependency id="System.IO.Abstractions" version="22.0.16" exclude="Build,Analyzers" />
+      </group>
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="DynamicData" version="9.4.1" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Bcl.HashCode" version="6.0.0" exclude="Build,Analyzers" />
+        <dependency id="System.Buffers" version="4.6.1" exclude="Build,Analyzers" />
+        <dependency id="System.IO.Abstractions" version="22.0.16" exclude="Build,Analyzers" />
+        <dependency id="System.Linq.Async" version="6.0.3" exclude="Build,Analyzers" />
+        <dependency id="System.Memory" version="4.6.3" exclude="Build,Analyzers" />
+        <dependency id="System.Reactive" version="6.0.2" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>

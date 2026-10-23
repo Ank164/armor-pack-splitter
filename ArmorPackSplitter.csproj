@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType><TargetFramework>net10.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms><Nullable>enable</Nullable><ImplicitUsings>enable</ImplicitUsings>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier><SelfContained>true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile><IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <Version>1.0.0</Version>
+    <!-- MO2's injected startup trampoline is incompatible with CET shadow stacks. -->
+    <CETCompat>false</CETCompat>
+    <Product>Armor Pack Splitter</Product><Title>Armor Pack Splitter</Title>
+    <AssemblyTitle>Armor Pack Splitter</AssemblyTitle>
+    <Description>Export Skyrim armor sets and their dependencies into standalone mods.</Description>
+    <ApplicationIcon>Assets\ArmorPackSplitter.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup><PackageReference Include="Mutagen.Bethesda.Skyrim" Version="0.53.1" /><PackageReference Include="Nifly" Version="1.1.0" /></ItemGroup>
+  <ItemGroup><None Update="README.md;LICENSE;THIRD-PARTY-NOTICES.md;licenses\**\*" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" ExcludeFromSingleFile="true" /></ItemGroup>
+  <ItemGroup><None Update="Assets\ArmorPackSplitter.ico;Assets\ArmorPackSplitter.png;Assets\Icon-Prompt.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" ExcludeFromSingleFile="true" /></ItemGroup>
+</Project>

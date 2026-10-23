@@ -1,0 +1,23 @@
+name: Build and check
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Build, check, and package
+        shell: pwsh
+        run: ./Build-Release.ps1
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ArmorPackSplitter-win-x64
+          path: |
+            artifacts/*.zip
+            artifacts/*.sha256
